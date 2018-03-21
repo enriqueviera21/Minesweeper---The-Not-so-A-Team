@@ -17,6 +17,9 @@ public class MyPanel extends JPanel {
 	public int mouseDownGridX = 0;
 	public int mouseDownGridY = 0;
 	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
+	public int[][] bombGrid = new int[15][2];
+	public Random generator = new Random();
+	
 	public MyPanel() {   //This is the constructor... this code runs first to initialize
 		if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {	//Use of "random" to prevent unwanted Eclipse warning
 			throw new RuntimeException("INNER_CELL_SIZE must be positive!");
@@ -37,6 +40,71 @@ public class MyPanel extends JPanel {
 			for (int y = 1; y < TOTAL_ROWS; y++) {
 				colorArray[x][y] = Color.WHITE;
 			}
+		}
+		int[] bombPoint = new int[2];
+		for(int i = 0; i < 15; i++) {
+
+			switch (generator.nextInt(9)) {
+			case 0:
+				bombPoint[0] = 0;
+				break;
+			case 1:
+				bombPoint[0] = 1;
+				break;
+			case 2:
+				bombPoint[0] = 2;
+				break;
+			case 3:
+				bombPoint[0] = 3;
+				break;
+			case 4:
+				bombPoint[0] = 4;
+				break;
+			case 5:
+				bombPoint[0] = 5;
+				break;
+			case 6:
+				bombPoint[0] = 6;
+				break;
+			case 7:
+				bombPoint[0] = 7;
+				break;
+			case 8:
+				bombPoint[0] = 8;
+				break;
+			}
+			switch (generator.nextInt(9)) {
+			case 0:
+				bombPoint[1] = 0;
+				break;
+			case 1:
+				bombPoint[1] = 1;
+				break;
+			case 2:
+				bombPoint[1] = 2;
+				break;
+			case 3:
+				bombPoint[1] = 3;
+				break;
+			case 4:
+				bombPoint[1] = 4;
+				break;
+			case 5:
+				bombPoint[1] = 5;
+				break;
+			case 6:
+				bombPoint[1] = 6;
+				break;
+			case 7:
+				bombPoint[1] = 7;
+				break;
+			case 8:
+				bombPoint[1] = 8;
+				break;
+			}
+			
+			bombGrid[i][0] = bombPoint[0];
+			bombGrid[i][1] = bombPoint[1];
 		}
 	}
 	public void paintComponent(Graphics g) {
@@ -100,7 +168,12 @@ public class MyPanel extends JPanel {
 
 	}
 	
-
+	public boolean IsBomb(int xPoint, int yPoint) { 
+		for (int i = 0; i < 15; i ++) {
+			if (bombGrid[i][0] == xPoint && bombGrid[i][1] == yPoint) {return true;}
+		}
+		return false;
+	}
 
 
 	public int getGridX(int x, int y) {
@@ -153,4 +226,5 @@ public class MyPanel extends JPanel {
 		}
 		return y;
 	}
+	
 }

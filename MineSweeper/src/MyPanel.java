@@ -107,6 +107,8 @@ public class MyPanel extends JPanel {
 			
 			bombGrid[i][0] = bombPoint[0];
 			bombGrid[i][1] = bombPoint[1];
+			System.out.print(bombGrid[i][0]+"\t");
+			System.out.println(bombGrid[i][1]);
 		}
 	}
 	public void paintComponent(Graphics g) {
@@ -145,6 +147,9 @@ public class MyPanel extends JPanel {
 					Color c = colorArray[x][y];
 					g.setColor(c);
 					g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);
+					if (!((grid[x][y] == 0) || (grid[x][y] == -1)))
+						g.drawString(Integer.toString(grid[x][y]), x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1);
+//					System.out.println(Integer.toString(grid[x][y]));
 				}
 			}
 		}
@@ -177,12 +182,13 @@ public class MyPanel extends JPanel {
 		}
 		return false;
 	}
+	
 	// Sets a two dimensional array to represent the MineSweeper 9x9 Grid.
 	// Bombs represent -1 and empty cells represent 0.
 	// The correct numbers are taken from the setNumber method.
 	public void setGrid() {
 		for (int i = 0; i<15; i++) {
-			grid[bombGrid[i][0]][bombGrid[5][1]] = -1;
+			grid[bombGrid[i][0]][bombGrid[i][1]] = -1;
 		}
 		for (int i = 0; i<9; i++) {
 			for (int j = 0; j<9;j++) {
@@ -192,9 +198,10 @@ public class MyPanel extends JPanel {
 			}
 		}
 	}
-	// Returns the two dimensional array.
-	public int[][] getGrid(){
-		return this.grid;
+	// Returns the status of a point in the grid (bomb = -1, nothing = 0, or number of bombs around)
+	public int getGridPoint(int x, int y){
+		setGrid();
+		return this.grid[x][y];
 	}
 	// Verifies all the cells around a certain cell to see if it has any bombs.
 	// Returns the number of bombs around this cell.

@@ -2,7 +2,7 @@ import javax.swing.JFrame;
 
 public class Main {
 	public static void main(String[] args) {
-		JFrame myFrame = new JFrame("Bienve's Grid");
+		JFrame myFrame = new JFrame("Sweeper of Mines");
 		myFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		myFrame.setLocation(400, 150);
 		myFrame.setSize(900, 900);
@@ -12,7 +12,7 @@ public class Main {
 
 		MyMouseAdapter myMouseAdapter = new MyMouseAdapter();
 		myFrame.addMouseListener(myMouseAdapter);
-
 		myFrame.setVisible(true);
+		
+		}
 	}
-}

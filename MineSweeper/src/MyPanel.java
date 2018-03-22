@@ -19,6 +19,7 @@ public class MyPanel extends JPanel {
 	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
 	public int[][] bombGrid = new int[15][2];
 	public Random generator = new Random();
+	public int[][] grid = new int[9][9];
 	
 	public MyPanel() {   //This is the constructor... this code runs first to initialize
 		if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {	//Use of "random" to prevent unwanted Eclipse warning
@@ -27,8 +28,8 @@ public class MyPanel extends JPanel {
 		if (TOTAL_COLUMNS + (new Random()).nextInt(1) < 2) {	//Use of "random" to prevent unwanted Eclipse warning
 			throw new RuntimeException("TOTAL_COLUMNS must be at least 2!");
 		}
-		if (TOTAL_ROWS + (new Random()).nextInt(1) < 3) {	//Use of "random" to prevent unwanted Eclipse warning
-			throw new RuntimeException("TOTAL_ROWS must be at least 3!");
+		if (TOTAL_ROWS + (new Random()).nextInt(1) < 2) {	//Use of "random" to prevent unwanted Eclipse warning
+			throw new RuntimeException("TOTAL_ROWS must be at least 2!");
 		}
 		/*for (int x = 0; x < TOTAL_COLUMNS; x++) {   //Top row
 			colorArray[x][0] = Color.LIGHT_GRAY;
@@ -41,6 +42,8 @@ public class MyPanel extends JPanel {
 				colorArray[x][y] = Color.WHITE;
 			}
 		}
+		
+		// Bomb Grid: 
 		int[] bombPoint = new int[2];
 		for(int i = 0; i < 15; i++) {
 			switch (generator.nextInt(9)) {
@@ -152,7 +155,7 @@ public class MyPanel extends JPanel {
 	// It is partially implemented since the verify hasn't been discussed in class
 	// Verify that the coordinates in the parameters are valid.
 	// Also verifies if there are any mines around the x,y coordinate
-	public void revealAdjacent(int x, int y){
+	/*public void revealAdjacent(int x, int y){
 		if((x<0) || (y<0) || (x>=9) || (y>=9)){return;}
 
 		else {
@@ -165,15 +168,49 @@ public class MyPanel extends JPanel {
 		
 		System.out.println("Test");
 
-	}
+	}*/
 	
+	// Returns a boolean value verifying if the given point is a bomb from the bombGrid.
 	public boolean IsBomb(int xPoint, int yPoint) { 
 		for (int i = 0; i < 15; i ++) {
 			if (bombGrid[i][0] == xPoint && bombGrid[i][1] == yPoint) {return true;}
 		}
 		return false;
 	}
-
+	// Sets a two dimensional array to represent the MineSweeper 9x9 Grid.
+	// Bombs represent -1 and empty cells represent 0.
+	// The correct numbers are taken from the setNumber method.
+	public void setGrid() {
+		for (int i = 0; i<15; i++) {
+			grid[bombGrid[i][0]][bombGrid[5][1]] = -1;
+		}
+		for (int i = 0; i<9; i++) {
+			for (int j = 0; j<9;j++) {
+				if(grid[i][j] != -1) {
+					grid[i][j] = setNumber(i, j);
+				}
+			}
+		}
+	}
+	// Returns the two dimensional array.
+	public int[][] getGrid(){
+		return this.grid;
+	}
+	// Verifies all the cells around a certain cell to see if it has any bombs.
+	// Returns the number of bombs around this cell.
+	public int setNumber(int x, int y) {
+		int counter = 0;
+		if(IsBomb(x-1, y)){}
+		else if(IsBomb(x-1, y-1)){counter+=1;}
+		else if(IsBomb(x-1, y+1)){counter+=1;}
+		else if(IsBomb(x+1, y)){counter+=1;}
+		else if(IsBomb(x+1, y-1)){counter+=1;}
+		else if(IsBomb(x+1, y+1)){counter+=1;}
+		else if(IsBomb(x, y-1)) {counter+=1;}
+		else if(IsBomb(x, y+1)) {counter+=1;}
+		else {}
+		return counter;		
+	}
 
 	public int getGridX(int x, int y) {
 		Insets myInsets = getInsets();

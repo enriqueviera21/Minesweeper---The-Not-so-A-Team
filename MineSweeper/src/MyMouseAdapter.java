@@ -119,23 +119,7 @@ public class MyMouseAdapter extends MouseAdapter {
 				myPanel.repaint();
 				break;
 			case 3:		//Right mouse button
-				if ((myPanel.mouseDownGridX == -1) || (myPanel.mouseDownGridY == -1)) {
-					//Had pressed outside
-					//Do nothing
-				} else {
-					if ((gridX == -1) || (gridY == -1)) {
-						//Is releasing outside
-						//Do nothing
-					} else {
-						if ((myPanel.mouseDownGridX != gridX) || (myPanel.mouseDownGridY != gridY)) {
-							//Released the mouse button on a different cell where it was pressed
-							//Do nothing
-						} else {
-							myPanel.colorArray[myPanel.mouseDownGridX][myPanel.mouseDownGridY] = Color.RED;
-							
-						}}}
-				myPanel.repaint();
-				break;
+				// Do nothing
 			default:    //Some other button (2 = Middle mouse button, etc.)
 				//Do nothing
 				

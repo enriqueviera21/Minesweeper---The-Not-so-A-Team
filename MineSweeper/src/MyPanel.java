@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.util.Random;
@@ -107,8 +108,8 @@ public class MyPanel extends JPanel {
 			
 			bombGrid[i][0] = bombPoint[0];
 			bombGrid[i][1] = bombPoint[1];
-			System.out.print(bombGrid[i][0]+"\t");
-			System.out.println(bombGrid[i][1]);
+			//System.out.print(bombGrid[i][0]+"\t");
+			//System.out.println(bombGrid[i][1]);
 		}
 	}
 	public void paintComponent(Graphics g) {
@@ -139,20 +140,24 @@ public class MyPanel extends JPanel {
 
 		//Draw an additional cell at the bottom left
 		//g.drawRect(x1 + GRID_X, y1 + GRID_Y + ((INNER_CELL_SIZE + 1) * (TOTAL_ROWS - 1)), INNER_CELL_SIZE + 1, INNER_CELL_SIZE + 1);
-
+		
 		//Paint cell colors
 		for (int x = 0; x < TOTAL_COLUMNS; x++) {
 			for (int y = 0; y < TOTAL_ROWS; y++) {
 				if ((x == 0) || (y != TOTAL_ROWS)) {
 					Color c = colorArray[x][y];
 					g.setColor(c);
-					g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);
-					if (!((grid[x][y] == 0) || (grid[x][y] == -1))) {						
-						g.drawString(Integer.toString(grid[x][y]),x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1);
+					g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)), INNER_CELL_SIZE, INNER_CELL_SIZE);
+					if (grid[x][y] > 0) {						
+						Font font = new Font("Helvetica", Font.PLAIN, 50);
+						g.setFont(font);
+						g.setColor(Color.WHITE);
+						g.drawString(Integer.toString(grid[x][y]),x1 + GRID_X + (x * (INNER_CELL_SIZE)) + 25, y1 + GRID_Y + ((y+1) * (INNER_CELL_SIZE)) - 18);
+						g.setColor(c);
 				
 					}
-
 				}
+				
 			}
 		}	
 	}
@@ -163,59 +168,39 @@ public class MyPanel extends JPanel {
 	// Verify that the coordinates in the parameters are valid.
 	// Also verifies if there are any mines around the x,y coordinate
 	public void revealAdjacent(int x, int y){
-		if((x<0) || (y<0) || (x>=9) || (y>=9)){return;}
-		else if(grid[x-1][y] == 0){
-			colorArray[x-1][y] = Color.GRAY;
-		}else if(grid[x-1][y-1] == 0){
-			colorArray[x-1][y-1] = Color.GRAY;
-		}else if(grid[x-1][y+1] == 0){
-			colorArray[x-1][y+1] = Color.GRAY;
-		}else if(grid[x+1][y] == 0){
-			colorArray[x+1][y] = Color.GRAY;
-		}else if(grid[x+1][y-1] == 0){
-			colorArray[x+1][y-1] = Color.GRAY;
-		}else if(grid[x+1][y+1] == 0){
-			colorArray[x+1][y+1] = Color.GRAY;
-		}else if(grid[x][y+1] == 0){
-			colorArray[x][y+1] = Color.GRAY;
-		}else if(grid[x][y-1] == 0){
-			colorArray[x][y-1] = Color.GRAY;
+		if(grid[x][y] == 0) {
+			if((x-1 > 0) && grid[x-1][y] == 0){
+				colorArray[x-1][y] = Color.GRAY;
+			}else if((x-1 > 0) && (y-1 > 0) && grid[x-1][y-1] == 0){
+				colorArray[x-1][y-1] = Color.GRAY;
+			}else if((x-1 > 0) && (y+1 < 9) && grid[x-1][y+1] == 0){
+				colorArray[x-1][y+1] = Color.GRAY;
+			}else if((x+1 < 9) && grid[x+1][y] == 0){
+				colorArray[x+1][y] = Color.GRAY;
+			}else if((x+1 < 9) && (y-1 > 0) && grid[x+1][y-1] == 0){
+				colorArray[x+1][y-1] = Color.GRAY;
+			}else if((x+1 < 9) && (y+1 < 9) && grid[x+1][y+1] == 0){
+				colorArray[x+1][y+1] = Color.GRAY;
+			}else if((y+1 < 9) && grid[x][y+1] == 0){
+				colorArray[x][y+1] = Color.GRAY;
+			}else if((y-1 > 0) && grid[x][y-1] == 0){
+				colorArray[x][y-1] = Color.GRAY;
+			}
+			try {revealAdjacent(x-1,y);}catch(IndexOutOfBoundsException e) {}
+			try {revealAdjacent(x-1,y-1);}catch(IndexOutOfBoundsException e) {}
+			try {revealAdjacent(x-1,y+1);}catch(IndexOutOfBoundsException e) {}
+			try {revealAdjacent(x+1,y);}catch(IndexOutOfBoundsException e) {}
+			try {revealAdjacent(x+1,y-1);}catch(IndexOutOfBoundsException e) {}
+			try {revealAdjacent(x+1,y);}catch(IndexOutOfBoundsException e) {}
+			try {revealAdjacent(x,y-1);}catch(IndexOutOfBoundsException e) {}
+			try {revealAdjacent(x,y+1);}catch(IndexOutOfBoundsException e) {}
+			
+			
+			
 		}
+	}
+	
 		
-	}
-	
-	// Returns a boolean value verifying if the given point is a bomb from the bombGrid.
-	public boolean IsBomb(int xPoint, int yPoint) { 
-		for (int i = 0; i < 15; i++) {
-			if (bombGrid[i][0] == xPoint && bombGrid[i][1] == yPoint) {return true;}
-		}
-		return false;
-	}
-	
-	public void emptyAround(int x, int y) {
-		if(IsBomb(x-1, y)){
-			;}
-		else if(IsBomb(x-1, y-1)){
-			;}
-		else if(IsBomb(x-1, y+1)){
-			;}
-		else if(IsBomb(x+1, y)){
-			
-		}
-		else if(IsBomb(x+1, y-1)){
-			
-		}
-		else if(IsBomb(x+1, y+1)){
-			
-		}
-		else if(IsBomb(x, y-1)) {
-			
-		}
-		else if(IsBomb(x, y+1)) {
-			
-		}
-		else {}
-	}
 	// Sets a two dimensional array to represent the MineSweeper 9x9 Grid.
 	// Bombs represent -1 and empty cells represent 0.
 	// The correct numbers are taken from the setNumber method.
@@ -240,17 +225,27 @@ public class MyPanel extends JPanel {
 	// Returns the number of bombs around this cell.
 	public int setNumber(int x, int y) {
 		int counter = 0;
-		if(IsBomb(x-1, y)){counter+=1;}
-		else if(IsBomb(x-1, y-1)){counter+=1;}
-		else if(IsBomb(x-1, y+1)){counter+=1;}
-		else if(IsBomb(x+1, y)){counter+=1;}
-		else if(IsBomb(x+1, y-1)){counter+=1;}
-		else if(IsBomb(x+1, y+1)){counter+=1;}
-		else if(IsBomb(x, y-1)) {counter+=1;}
-		else if(IsBomb(x, y+1)) {counter+=1;}
-		else {}
+		if((x-1 > 0) && IsBomb(x-1, y)){counter+=1;}
+		if((x-1 > 0) && (y-1 > 0) && IsBomb(x-1, y-1)){counter+=1;}
+		if((x-1 > 0) && (y+1 < 9) && IsBomb(x-1, y+1)){counter+=1;}
+		if((x+1 < 9) && IsBomb(x+1, y)){counter+=1;}
+		if((x+1 < 9) && (y-1 > 0) && IsBomb(x+1, y-1)){counter+=1;}
+		if((x+1 < 9) && (y+1 < 9) && IsBomb(x+1, y+1)){counter+=1;}
+		if((y-1 > 0) && IsBomb(x, y-1)) {counter+=1;}
+		if((y+1 < 9) && IsBomb(x, y+1)) {counter+=1;}
+			System.out.println(counter + "\t"+ x +"\t" + y);
 		return counter;		
 	}
+	
+	// Returns a boolean value verifying if the given point is a bomb from the bombGrid.
+		public boolean IsBomb(int xPoint, int yPoint) { 
+			for (int i = 0; i < 15; i++) {
+				if (bombGrid[i][0] == xPoint && bombGrid[i][1] == yPoint) {
+					//System.out.println(bombGrid[i][0]+"\t"+bombGrid[i][1]);
+					return true;}
+			}
+			return false;
+		}
 
 	public int getGridX(int x, int y) {
 		Insets myInsets = getInsets();
@@ -272,7 +267,7 @@ public class MyPanel extends JPanel {
 		if (x == 0 && y == TOTAL_ROWS - 1) {    //The lower left extra cell
 			return x;
 		}
-		if (x < 0 || x > TOTAL_COLUMNS - 1 || y < 0 || y > TOTAL_ROWS - 2) {   //Outside the rest of the grid
+		if (x < 0 || x > TOTAL_COLUMNS - 1 || y < 0 || y > TOTAL_ROWS -1) {   //Outside the rest of the grid
 			return -1;
 		}
 		return x;
@@ -297,7 +292,7 @@ public class MyPanel extends JPanel {
 		if (x == 0 && y == TOTAL_ROWS - 1) {    //The lower left extra cell
 			return y;
 		}
-		if (x < 0 || x > TOTAL_COLUMNS - 1 || y < 0 || y > TOTAL_ROWS - 2) {   //Outside the rest of the grid
+		if (x < 0 || x > TOTAL_COLUMNS - 1 || y < 0 || y > TOTAL_ROWS - 1) {   //Outside the rest of the grid
 			return -1;
 		}
 		return y;

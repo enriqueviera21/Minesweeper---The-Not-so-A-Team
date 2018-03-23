@@ -111,6 +111,7 @@ public class MyMouseAdapter extends MouseAdapter {
 										newColor = Color.BLUE;
 								}*/
 									myPanel.colorArray[myPanel.mouseDownGridX][myPanel.mouseDownGridY] = newColor;
+									myPanel.revealAdjacent(myPanel.mouseDownGridX, myPanel.mouseDownGridY);
 									myPanel.repaint();
 							//}
 						}

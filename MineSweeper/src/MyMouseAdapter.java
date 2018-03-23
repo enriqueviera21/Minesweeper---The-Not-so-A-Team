@@ -34,7 +34,26 @@ public class MyMouseAdapter extends MouseAdapter {
 				
 				break;
 			case 3:		//Right mouse button
-				//Do nothing
+				Component d = e.getComponent();
+				while (!(d instanceof JFrame)) {
+					d = d.getParent();
+					if (d == null) {
+						return;
+					}
+				}
+				JFrame myFrame1 = (JFrame)d;
+				MyPanel myPanel1 = (MyPanel) myFrame1.getContentPane().getComponent(0);  //Can also loop among components to find MyPanel
+				Insets myInsets1 = myFrame1.getInsets();
+				int x2 = myInsets1.left;
+				int y2 = myInsets1.top;
+				e.translatePoint(-x2, -y2);
+				int x0 = e.getX();
+				int y0 = e.getY();
+				myPanel1.x = x0;
+				myPanel1.y = y0;
+				myPanel1.mouseDownGridX = myPanel1.getGridX(x0, y0);
+				myPanel1.mouseDownGridY = myPanel1.getGridY(x0, y0);
+				myPanel1.repaint();
 				break;
 			default:    //Some other button (2 = Middle mouse button, etc.)
 				//Do nothing
@@ -120,7 +139,51 @@ public class MyMouseAdapter extends MouseAdapter {
 				myPanel.repaint();
 				break;
 			case 3:		//Right mouse button
-				// Do nothing
+				Component d = e.getComponent();
+				while (!(d instanceof JFrame)) {
+					d = d.getParent();
+					if (d == null) {
+						return;
+					}
+				}
+				JFrame myFrame1 = (JFrame)d;
+				MyPanel myPanel1 = (MyPanel) myFrame1.getContentPane().getComponent(0);  //Can also loop among components to find MyPanel
+				Insets myInsets1 = myFrame1.getInsets();
+				int x2 = myInsets1.left;
+				int y2 = myInsets1.top;
+				e.translatePoint(-x2, -y2);
+				int x0 = e.getX();
+				int y0 = e.getY();
+				myPanel1.x = x0;
+				myPanel1.y = y0;
+				int gridX1 = myPanel1.getGridX(x0, y0);
+				int gridY1 = myPanel1.getGridY(x0, y0);
+				if ((myPanel1.mouseDownGridX == -1) || (myPanel1.mouseDownGridY == -1)) {
+					//Had pressed outside
+					//Do nothing
+				} else {
+					if ((gridX1 == -1) || (gridY1 == -1)) {
+						//Is releasing outside
+						//Do nothing
+					} else {
+						if ((myPanel1.mouseDownGridX != gridX1) || (myPanel1.mouseDownGridY != gridY1)) {
+							//Released the mouse button on a different cell where it was pressed
+							//Do nothing
+						} else {
+							//Released the mouse button on the same cell where it was pressed
+							if ((gridX1 == 0) || (gridY1 == 0)) {
+								//On the left column and on the top row... do nothing
+							} else {
+								
+								myPanel1.colorArray[myPanel1.mouseDownGridX][myPanel1.mouseDownGridY] = Color.RED;
+								myPanel1.repaint();
+								
+							}
+						}
+					}
+				}
+				myPanel1.repaint();
+				break;
 			default:    //Some other button (2 = Middle mouse button, etc.)
 				//Do nothing
 				

@@ -18,9 +18,12 @@ public class MyPanel extends JPanel {
 	public int mouseDownGridX = 0;
 	public int mouseDownGridY = 0;
 	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
-	public int[][] bombGrid = new int[15][2];
+	public static int[][] bombGrid = new int[15][2];
 	public Random generator = new Random();
 	public int[][] grid = new int[9][9];
+	public static boolean searchMines = false;
+	public static int mineCenter;
+	public int n;
 	
 	public MyPanel() {   //This is the constructor... this code runs first to initialize
 		if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {	//Use of "random" to prevent unwanted Eclipse warning
@@ -168,37 +171,78 @@ public class MyPanel extends JPanel {
 	// Verify that the coordinates in the parameters are valid.
 	// Also verifies if there are any mines around the x,y coordinate
 	public void revealAdjacent(int x, int y){
-		if(grid[x][y] == 0) {
-			if((x-1 > 0) && grid[x-1][y] == 0){
-				colorArray[x-1][y] = Color.GRAY;
-			}else if((x-1 > 0) && (y-1 > 0) && grid[x-1][y-1] == 0){
-				colorArray[x-1][y-1] = Color.GRAY;
-			}else if((x-1 > 0) && (y+1 < 9) && grid[x-1][y+1] == 0){
-				colorArray[x-1][y+1] = Color.GRAY;
-			}else if((x+1 < 9) && grid[x+1][y] == 0){
-				colorArray[x+1][y] = Color.GRAY;
-			}else if((x+1 < 9) && (y-1 > 0) && grid[x+1][y-1] == 0){
-				colorArray[x+1][y-1] = Color.GRAY;
-			}else if((x+1 < 9) && (y+1 < 9) && grid[x+1][y+1] == 0){
-				colorArray[x+1][y+1] = Color.GRAY;
-			}else if((y+1 < 9) && grid[x][y+1] == 0){
-				colorArray[x][y+1] = Color.GRAY;
-			}else if((y-1 > 0) && grid[x][y-1] == 0){
-				colorArray[x][y-1] = Color.GRAY;
+		
+		//for (int i = 0; i < TOTAL_COLUMNS; i++) {
+			//for (int j = 0; j < TOTAL_ROWS; j++) {
+				while(grid[x][y] == 0) {
+					if((x-1 > 0) && grid[x-1][y] == 0){
+						colorArray[x-1][y] = Color.GRAY;
+						revealAdjacent(x,y);
+					}
+					if((x-1 > 0) && (y-1 > 0) && grid[x-1][y-1] == 0){
+						colorArray[x-1][y-1] = Color.GRAY;
+						revealAdjacent(x,y);
+					}
+					if((x-1 > 0) && (y+1 < 9) && grid[x-1][y+1] == 0){
+						colorArray[x-1][y+1] = Color.GRAY;
+						revealAdjacent(x,y);
+					}
+					if((x+1 < 9) && grid[x+1][y] == 0){
+						colorArray[x+1][y] = Color.GRAY;
+						revealAdjacent(x,y);
+					}
+					if((x+1 < 9) && (y-1 > 0) && grid[x+1][y-1] == 0){
+						colorArray[x+1][y-1] = Color.GRAY;
+						revealAdjacent(x,y);
+					}
+					if((x+1 < 9) && (y+1 < 9) && grid[x+1][y+1] == 0){
+						colorArray[x+1][y+1] = Color.GRAY;
+						revealAdjacent(x,y);
+					}
+					if((y+1 < 9) && grid[x][y+1] == 0){
+						colorArray[x][y+1] = Color.GRAY;
+						revealAdjacent(x,y);
+					}
+					if((y-1 > 0) && grid[x][y-1] == 0){
+						colorArray[x][y-1] = Color.GRAY;
+						revealAdjacent(x,y);
+					}
+					//
 			}
-			try {revealAdjacent(x-1,y);}catch(IndexOutOfBoundsException e) {}
-			try {revealAdjacent(x-1,y-1);}catch(IndexOutOfBoundsException e) {}
-			try {revealAdjacent(x-1,y+1);}catch(IndexOutOfBoundsException e) {}
-			try {revealAdjacent(x+1,y);}catch(IndexOutOfBoundsException e) {}
-			try {revealAdjacent(x+1,y-1);}catch(IndexOutOfBoundsException e) {}
-			try {revealAdjacent(x+1,y);}catch(IndexOutOfBoundsException e) {}
-			try {revealAdjacent(x,y-1);}catch(IndexOutOfBoundsException e) {}
-			try {revealAdjacent(x,y+1);}catch(IndexOutOfBoundsException e) {}
-			
-			
-			
 		}
-	}
+		
+//		if(grid[x][y] == 0) {
+//			if((x-1 > 0) && grid[x-1][y] == 0){
+//				colorArray[x-1][y] = Color.YELLOW;
+//			}else if((x-1 > 0) && (y-1 > 0) && grid[x-1][y-1] == 0){
+//				colorArray[x-1][y-1] = Color.CYAN;
+//			}else if((x-1 > 0) && (y+1 < 9) && grid[x-1][y+1] == 0){
+//				colorArray[x-1][y+1] = Color.MAGENTA;
+//			}else if((x+1 < 9) && grid[x+1][y] == 0){
+//				colorArray[x+1][y] = Color.PINK;
+//			}else if((x+1 < 9) && (y-1 > 0) && grid[x+1][y-1] == 0){
+//				colorArray[x+1][y-1] = Color.BLUE;
+//			}else if((x+1 < 9) && (y+1 < 9) && grid[x+1][y+1] == 0){
+//				colorArray[x+1][y+1] = Color.GREEN;
+//			}else if((y+1 < 9) && grid[x][y+1] == 0){
+//				colorArray[x][y+1] = Color.ORANGE;
+//			}else if((y-1 > 0) && grid[x][y-1] == 0){
+//				colorArray[x][y-1] = Color.GRAY;
+//			}
+//			revealAdjacent(x,y);
+//			//try {revealAdjacent(x-1,y);}catch(IndexOutOfBoundsException e) {}
+//			//try {revealAdjacent(x-1,y-1);}catch(IndexOutOfBoundsException e) {}
+//			//try {revealAdjacent(x-1,y+1);}catch(IndexOutOfBoundsException e) {}
+//			//try {revealAdjacent(x+1,y);}catch(IndexOutOfBoundsException e) {}
+//			//try {revealAdjacent(x+1,y-1);}catch(IndexOutOfBoundsException e) {}
+//			//try {revealAdjacent(x+1,y);}catch(IndexOutOfBoundsException e) {}
+//			//try {revealAdjacent(x,y-1);}catch(IndexOutOfBoundsException e) {}
+//			//try {revealAdjacent(x,y+1);}catch(IndexOutOfBoundsException e) {}
+			
+			
+			
+		//}
+	//}
 	
 		
 	// Sets a two dimensional array to represent the MineSweeper 9x9 Grid.
@@ -297,5 +341,59 @@ public class MyPanel extends JPanel {
 		}
 		return y;
 	}
-	
+////	public searchMine() {
+////		for (int i = 0; i < TOTAL_COLUMNS; i++) {
+////			for (int j = 0; j < TOTAL_ROWS; j++) {
+////				if ( bombGrid[i][j] !=0 && colorArray[i][j] == Color.BLACK ) {
+////					searchMines = true;	
+////				}
+////			}
+////		}
+//	}
+//	public static boolean countUncovered() {
+//		boolean uncovered = true;
+//		for (int i = 0; i < TOTAL_COLUMNS; i++) {
+//			for (int j = 0; j < TOTAL_ROWS; j++) {
+//				if (bombGrid[i][j] == 0 && colorArray[i][j] == (Color.WHITE)) {
+//					uncovered = false;
+//				}
+//			}
+//		}
+//		return uncovered;
+//	}
+	public void adjacent() {
+		for (int i = 0; i < TOTAL_COLUMNS; i++) {
+			for (int j = 0; j < TOTAL_ROWS; j++) {
+				grid[i][j] = this.grid[x][y];
+				
+			}
+		}
+	}
+//	public static void MineCounter(int MouseDownX, int MouseDownY) {
+//		mineCenter = 0;
+//		
+//		for (int i = MouseDownX - 1 ; i <= MouseDownX + 1; i++) {
+//			for (int j = MouseDownY -1; j <= MouseDownY + 1; j++) {
+//				if (i < 0 || i > TOTAL_COLUMNS - 1 || j < 0 || j > TOTAL_ROWS - 1) {
+//					
+//				} else if (bombGrid[i][j] == -1) {
+//					mineCenter++;
+//				}
+//			}
+//		}
+//		if (mineCenter == 0) {
+//			for (int i = MouseDownX - 1; i <= MouseDownX + 1; i++) {
+//				for (int j = MouseDownY - 1 ; j <= MouseDownY + 1; j++) {
+//					if (i < 0 || i > TOTAL_COLUMNS - 1 || j < 0 || j > TOTAL_ROWS - 1) {
+//						
+//					} else if (bombGrid[i][j] == 0 && colorArray[i][j] != Color.GRAY) {
+//						colorArray[i][j] = Color.GRAY;
+//						MineCounter(i,j);
+//					}
+//						
+//					}
+//				}
+//		}
+//	}
+		
 }

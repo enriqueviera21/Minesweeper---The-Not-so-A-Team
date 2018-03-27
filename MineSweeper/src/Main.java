@@ -3,10 +3,8 @@ import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-
-
 public class Main {
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) {
 		JFrame myFrame = new JFrame("Sweeper of Mines");
 		myFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		myFrame.setLocation(400, 150);
@@ -19,9 +17,6 @@ public class Main {
 		myFrame.addMouseListener(myMouseAdapter);
 		myFrame.setVisible(true);
 		
-		//while (!(MyPanel.searchMines) && MyPanel.countUncovered()) {
-			//Continue game until mine is found or player wins
-			//Thread.sleep(1);
 		if (myPanel.IsBomb(myPanel.mouseDownGridX, myPanel.mouseDownGridY) && myPanel.mouseDownGridX == 0 && myPanel.mouseDownGridY == 0) {
 			JOptionPane.showMessageDialog(null, "You exploded a mine.");	
 			} 
@@ -37,12 +32,5 @@ public class Main {
 					
 			}
 		}
-		
-		//}
-			
-		
-
-		//if (myMouseAdapter = MyPanel.bombPoint) {
+		}
 	}
-}
-	
